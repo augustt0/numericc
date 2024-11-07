@@ -140,120 +140,112 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 64.0),
-                                child: Flexible(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      if (wrongAnswer)
-                                        const Text(
-                                          "Respuesta incorrecta :(",
-                                          style: TextStyle(
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    if (wrongAnswer)
                                       const Text(
-                                        "Pregunta: ",
+                                        "Respuesta incorrecta :(",
                                         style: TextStyle(
-                                            fontSize: 24,
-                                            color: Colors.white,
+                                            color: Colors.red,
                                             fontWeight: FontWeight.bold),
                                       ),
-                                      Text(
-                                        game.data!.question,
-                                        style: const TextStyle(
-                                            fontSize: 24, color: Colors.white),
-                                      ),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Flexible(
-                                        child: ConstrainedBox(
-                                          constraints: BoxConstraints(
-                                              maxHeight: MediaQuery.of(context)
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    const Text(
+                                      "Pregunta: ",
+                                      style: TextStyle(
+                                          fontSize: 24,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      game.data!.question,
+                                      style: const TextStyle(
+                                          fontSize: 24, color: Colors.white),
+                                    ),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                          maxHeight: MediaQuery.of(context)
+                                                      .size
+                                                      .width >
+                                                  600
+                                              ? 200
+                                              : double.infinity),
+                                      child: ListView.builder(
+                                          itemCount: game.data!.answers.length,
+                                          shrinkWrap: true,
+                                          padding: const EdgeInsets.all(8),
+                                          scrollDirection:
+                                              MediaQuery.of(context)
                                                           .size
                                                           .width >
                                                       600
-                                                  ? 200
-                                                  : double.infinity),
-                                          child: ListView.builder(
-                                              itemCount:
-                                                  game.data!.answers.length,
-                                              shrinkWrap: true,
-                                              padding: const EdgeInsets.all(8),
-                                              scrollDirection:
-                                                  MediaQuery.of(context)
-                                                              .size
-                                                              .width >
-                                                          600
-                                                      ? Axis.horizontal
-                                                      : Axis.vertical,
-                                              itemBuilder: (context, index) {
-                                                return TextButton(
-                                                  onPressed: () {
-                                                    if (!game.data!
-                                                        .verifyAnswer(index)) {
-                                                      setState(() {
-                                                        wrongAnswer = true;
-                                                        errores++;
-                                                      });
-                                                    } else {
-                                                      reset();
-                                                    }
-                                                    _focus.requestFocus();
-                                                  },
-                                                  child: Card(
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8)),
-                                                    color: const Color.fromARGB(
-                                                        91, 89, 89, 89),
-                                                    child: AspectRatio(
-                                                      aspectRatio:
+                                                  ? Axis.horizontal
+                                                  : Axis.vertical,
+                                          itemBuilder: (context, index) {
+                                            return TextButton(
+                                              onPressed: () {
+                                                if (!game.data!
+                                                    .verifyAnswer(index)) {
+                                                  setState(() {
+                                                    wrongAnswer = true;
+                                                    errores++;
+                                                  });
+                                                } else {
+                                                  reset();
+                                                }
+                                                _focus.requestFocus();
+                                              },
+                                              child: Card(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                color: const Color.fromARGB(
+                                                    91, 89, 89, 89),
+                                                child: AspectRatio(
+                                                  aspectRatio:
+                                                      MediaQuery.of(context)
+                                                                  .size
+                                                                  .width >
+                                                              600
+                                                          ? 1.2
+                                                          : 1.8,
+                                                  child: Padding(
+                                                      padding: EdgeInsets.all(
                                                           MediaQuery.of(context)
                                                                       .size
                                                                       .width >
                                                                   600
-                                                              ? 1.2
-                                                              : 1.8,
-                                                      child: Padding(
-                                                          padding: EdgeInsets.all(
-                                                              MediaQuery.of(context)
-                                                                          .size
-                                                                          .width >
-                                                                      600
-                                                                  ? 16.0
-                                                                  : 8.0),
-                                                          child: Center(
-                                                            child: Text(
-                                                              game.data!
-                                                                      .answers[
-                                                                  index],
-                                                              maxLines: 2,
-                                                              style: const TextStyle(
+                                                              ? 16.0
+                                                              : 8.0),
+                                                      child: Center(
+                                                        child: Text(
+                                                          game.data!
+                                                              .answers[index],
+                                                          maxLines: 2,
+                                                          style:
+                                                              const TextStyle(
                                                                   color: Colors
                                                                       .white,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
                                                                   fontSize: 20),
-                                                            ),
-                                                          )),
-                                                    ),
-                                                  ),
-                                                );
-                                              }),
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                                        ),
+                                                      )),
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                    )
+                                  ],
                                 ),
                               )),
                         ),
