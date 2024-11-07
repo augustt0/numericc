@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
-                      mainAxisAlignment: MediaQuery.of(context).size.width > 900
+                      mainAxisAlignment: MediaQuery.of(context).size.width > 600
                           ? MainAxisAlignment.center
                           : MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -134,104 +134,129 @@ class _MyHomePageState extends State<MyHomePage> {
                         const SizedBox(
                           height: 12,
                         ),
-                        Form(
-                            key: _formKey,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 64.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  if (wrongAnswer)
-                                    const Text(
-                                      "Respuesta incorrecta :(",
-                                      style: TextStyle(
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  const SizedBox(
-                                    height: 8,
-                                  ),
-                                  const Text(
-                                    "Pregunta: ",
-                                    style: TextStyle(
-                                        fontSize: 24,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    game.data!.question,
-                                    style: const TextStyle(
-                                        fontSize: 24, color: Colors.white),
-                                  ),
-                                  const SizedBox(
-                                    height: 8,
-                                  ),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width >
-                                            900
-                                        ? MediaQuery.of(context).size.width / 3
-                                        : double.infinity,
-                                    child: TextFormField(
-                                      controller: _valueController,
-                                      focusNode: _focus,
-                                      decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              borderSide: const BorderSide(
-                                                  color: Colors.grey,
-                                                  width: 1))),
-                                      style: const TextStyle(
-                                          fontSize: 24, color: Colors.white),
-                                      onFieldSubmitted: (r) {
-                                        if (!game.data!.verifyAnswer(r)) {
-                                          setState(() {
-                                            wrongAnswer = true;
-                                            errores++;
-                                          });
-                                        } else {
-                                          reset();
-                                        }
-                                        _focus.requestFocus();
-                                      },
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 8,
-                                  ),
-                                  TextButton(
-                                      onPressed: () {
-                                        if (!game.data!.verifyAnswer(
-                                            _valueController.text)) {
-                                          setState(() {
-                                            wrongAnswer = true;
-                                            errores++;
-                                          });
-                                        } else {
-                                          reset();
-                                        }
-                                        _focus.requestFocus();
-                                      },
-                                      child: Card(
-                                        color: Colors.red,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        child: const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8, vertical: 4),
-                                          child: Text(
-                                            "Enviar respuesta",
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
+                        Flexible(
+                          child: Form(
+                              key: _formKey,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 64.0),
+                                child: Flexible(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      if (wrongAnswer)
+                                        const Text(
+                                          "Respuesta incorrecta :(",
+                                          style: TextStyle(
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold),
                                         ),
-                                      ))
-                                ],
-                              ),
-                            )),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      const Text(
+                                        "Pregunta: ",
+                                        style: TextStyle(
+                                            fontSize: 24,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        game.data!.question,
+                                        style: const TextStyle(
+                                            fontSize: 24, color: Colors.white),
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      Flexible(
+                                        child: ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                              maxHeight: MediaQuery.of(context)
+                                                          .size
+                                                          .width >
+                                                      600
+                                                  ? 200
+                                                  : double.infinity),
+                                          child: ListView.builder(
+                                              itemCount:
+                                                  game.data!.answers.length,
+                                              shrinkWrap: true,
+                                              padding: const EdgeInsets.all(8),
+                                              scrollDirection:
+                                                  MediaQuery.of(context)
+                                                              .size
+                                                              .width >
+                                                          600
+                                                      ? Axis.horizontal
+                                                      : Axis.vertical,
+                                              itemBuilder: (context, index) {
+                                                return TextButton(
+                                                  onPressed: () {
+                                                    if (!game.data!
+                                                        .verifyAnswer(index)) {
+                                                      setState(() {
+                                                        wrongAnswer = true;
+                                                        errores++;
+                                                      });
+                                                    } else {
+                                                      reset();
+                                                    }
+                                                    _focus.requestFocus();
+                                                  },
+                                                  child: Card(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8)),
+                                                    color: const Color.fromARGB(
+                                                        91, 89, 89, 89),
+                                                    child: AspectRatio(
+                                                      aspectRatio:
+                                                          MediaQuery.of(context)
+                                                                      .size
+                                                                      .width >
+                                                                  600
+                                                              ? 1.2
+                                                              : 1.8,
+                                                      child: Padding(
+                                                          padding: EdgeInsets.all(
+                                                              MediaQuery.of(context)
+                                                                          .size
+                                                                          .width >
+                                                                      600
+                                                                  ? 16.0
+                                                                  : 8.0),
+                                                          child: Center(
+                                                            child: Text(
+                                                              game.data!
+                                                                      .answers[
+                                                                  index],
+                                                              maxLines: 2,
+                                                              style: const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 20),
+                                                            ),
+                                                          )),
+                                                    ),
+                                                  ),
+                                                );
+                                              }),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )),
+                        ),
                       ],
                     ),
                   );
