@@ -1,7 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:numericc/ipv4.dart';
 
 void main() {
+  LicenseRegistry.addLicense(() async* {
+    final license = await rootBundle.loadString('google_fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+  });
+
   runApp(const MyApp());
 }
 
@@ -14,9 +22,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'NumeriCC',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),
+          useMaterial3: true,
+          textTheme: GoogleFonts.ubuntuMonoTextTheme()),
       home: const MyHomePage(),
     );
   }
@@ -168,6 +176,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                     child: TextFormField(
                                       controller: _valueController,
                                       focusNode: _focus,
+                                      decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              borderSide: const BorderSide(
+                                                  color: Colors.grey,
+                                                  width: 1))),
                                       style: const TextStyle(
                                           fontSize: 24, color: Colors.white),
                                       onFieldSubmitted: (r) {
