@@ -1,12 +1,17 @@
 import 'dart:math';
 
+import 'package:numericc/utils.dart';
+
 class IPv4 {
   Future<Game> getRandomGame() async {
     List<String> games = [
       "Ask Mask",
       "Ask Broadcast",
       "Ask Network",
-      "Ask Class"
+      "Ask Class",
+      "Ask Host",
+      "Ask Network Amount",
+      "Ask Host Amount",
     ];
 
     int last = -1;
@@ -30,6 +35,14 @@ class IPv4 {
           return await askNetwork();
         case "Ask Class":
           return await askIpClass();
+        case "Ask Host":
+          return await askHost();
+        case "Ask Network Amount":
+          return await askNetworkAmount();
+        case "Ask Host Amount":
+          return await askHostAmount();
+        default:
+          return await askNetwork();
       }
     }
   }
@@ -39,24 +52,20 @@ class IPv4 {
     return Random(DateTime.now().millisecondsSinceEpoch).nextInt(3);
   }
 
-  String classNameFromInt(int classInt) {
-    switch (classInt) {
-      case 0:
-        return "A";
-      case 1:
-        return "B";
-      case 2:
-        return "C";
-      default:
-        throw Exception("Class does not exist");
-    }
+  Future<Game> askHost() async {
+    int c = await getRandomClass();
+    String ip = await getIpFromClass(c);
+
+    return Game(
+        question: "El host de la ip $ip/${Utils.getMaskBits(c)}",
+        answer: Utils.getHostOfIp(ip));
   }
 
   Future<Game> askMask() async {
     int c = await getRandomClass();
     return Game(
-        question: "La máscara de la clase ${classNameFromInt(c)}",
-        answer: getMaskOfClass(c));
+        question: "La máscara de la clase ${Utils.classNameFromInt(c)}",
+        answer: Utils.getMaskOfClass(c));
   }
 
   Future<Game> askBroadcast() async {
@@ -64,14 +73,34 @@ class IPv4 {
     String ip = await getIpFromClass(c);
 
     return Game(
-        question: "El broadcast de la ip $ip", answer: getBroadcastOfIp(ip));
+        question: "El broadcast de la ip $ip",
+        answer: Utils.getBroadcastOfIp(ip));
   }
 
   Future<Game> askNetwork() async {
     int c = await getRandomClass();
     String ip = await getIpFromClass(c);
 
-    return Game(question: "La red de la ip $ip", answer: getNetworkOfIp(ip));
+    return Game(
+        question: "La red de la ip $ip", answer: Utils.getNetworkOfIp(ip));
+  }
+
+  Future<Game> askNetworkAmount() async {
+    int c = await getRandomClass();
+
+    return Game(
+        question:
+            "Cantidad (x) de redes de la clase ${Utils.classNameFromInt(c)} (2^x)",
+        answer: Utils.getClassNetworkAmount(c));
+  }
+
+  Future<Game> askHostAmount() async {
+    int c = await getRandomClass();
+
+    return Game(
+        question:
+            "Cantidad (x) de hosts de la clase ${Utils.classNameFromInt(c)} (2^x - 2)",
+        answer: Utils.getClassHostsAmount(c));
   }
 
   Future<Game> askIpClass() async {
@@ -80,7 +109,7 @@ class IPv4 {
 
     return Game(
         question: "La clase de la ip $ip",
-        answer: classNameFromInt(getClassOfIp(ip)));
+        answer: Utils.classNameFromInt(Utils.getClassOfIp(ip)));
   }
 
   Future<String> getIpFromClass(int classInt) async {
@@ -103,55 +132,6 @@ class IPv4 {
     }
 
     return randIp.join('.');
-  }
-
-  int getClassOfIp(String ip) {
-    int myIp = int.parse(ip.split(".").first);
-
-    if (myIp > 223) {
-      throw Exception("Invalid IP address");
-    }
-
-    if (myIp >= 192) {
-      return 2;
-    } else if (myIp >= 128) {
-      return 1;
-    } else {
-      return 0;
-    }
-  }
-
-  String getMaskOfClass(int classInt) {
-    switch (classInt) {
-      case 0:
-        return "255.0.0.0";
-      case 1:
-        return "255.255.0.0";
-      case 2:
-        return "255.255.255.0";
-      default:
-        throw Exception("Class does not exist");
-    }
-  }
-
-  String getNetworkOfIp(String ip) {
-    int c = getClassOfIp(ip);
-    List<int> myIp = ip.split(".").map((e) => int.parse(e)).toList();
-
-    for (int i = 3; i > c; i--) {
-      myIp[i] = 0;
-    }
-    return myIp.join(".");
-  }
-
-  String getBroadcastOfIp(String ip) {
-    int c = getClassOfIp(ip);
-    List<int> myIp = ip.split(".").map((e) => int.parse(e)).toList();
-
-    for (int i = 3; i > c; i--) {
-      myIp[i] = 255;
-    }
-    return myIp.join(".");
   }
 }
 
